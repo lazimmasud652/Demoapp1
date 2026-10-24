@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#10B981">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>PLANZO — Study Smarter. Finish Faster.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============ DESIGN TOKENS ============ */
+:root{
+  --emerald-50:#ECFDF5;--emerald-100:#D1FAE5;--emerald-200:#A7F3D0;--emerald-300:#6EE7B7;
+  --emerald-400:#34D399;--emerald-500:#10B981;--emerald-600:#059669;--emerald-700:#047857;
+  --emerald-800:#065F46;--emerald-900:#064E3B;
+  --amber-400:#FBBF24;--amber-500:#F59E0B;
+  --violet-400:#A78BFA;--violet-500:#8B5CF6;
+  --rose-400:#FB7185;--sky-400:#38BDF8;
+  --white:#FFFFFF;--slate-50:#F8FAFC;--slate-100:#F1F5F9;--slate-200:#E2E8F0;--slate-300:#CBD5E1;
+  --slate-400:#94A3B8;--slate-500:#64748B;--slate-600:#475569;--slate-700:#334155;--slate-800:#1E293B;--slate-900:#0F172A;
+
+  --grad-hero:linear-gradient(135deg,#10B981 0%,#34D399 50%,#6EE7B7 100%);
+  --grad-card:linear-gradient(135deg,#FFFFFF 0%,#F0FDF4 100%);
+  --grad-button:linear-gradient(135deg,#10B981 0%,#059669 100%);
+  --grad-revision:linear-gradient(135deg,#FEF3C7 0%,#FDE68A 100%);
+  --grad-exam:linear-gradient(135deg,#EDE9FE 0%,#DDD6FE 100%);
+
+  --shadow-xs:0 1px 2px rgba(16,185,129,.05);
+  --shadow-sm:0 2px 4px rgba(16,185,129,.06);
+  --shadow-md:0 4px 12px rgba(16,185,129,.08),0 2px 4px rgba(16,185,129,.04);
+  --shadow-lg:0 10px 25px rgba(16,185,129,.10),0 4px 10px rgba(16,185,129,.05);
+  --shadow-xl:0 20px 40px rgba(16,185,129,.12),0 8px 16px rgba(16,185,129,.06);
+  --shadow-2xl:0 25px 50px rgba(16,185,129,.15);
+  --shadow-glow:0 0 30px rgba(16,185,129,.35);
+
+  --text-xs:11px;--text-sm:13px;--text-base:15px;--text-lg:17px;--text-xl:20px;
+  --text-2xl:24px;--text-3xl:30px;--text-4xl:36px;--text-5xl:48px;
+
+  --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;
+  --space-6:24px;--space-8:32px;--space-10:40px;--space-12:48px;--space-16:64px;
+
+  --radius-sm:8px;--radius-md:12px;--radius-lg:16px;--radius-xl:20px;--radius-2xl:24px;--radius-3xl:32px;--radius-full:9999px;
+
+  --ease-spring:cubic-bezier(.34,1.56,.64,1);
+  --ease-smooth:cubic-bezier(.4,0,.2,1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--slate-50);
+  color:var(--slate-800);
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  max-width:430px;
+  margin:0 auto;
+  position:relative;
+  min-height:100vh;
+}
+.display{font-family:'Plus Jakarta Sans','Inter',-apple-system,sans-serif;}
+button{font-family:inherit;cursor:pointer;}
+img,svg{display:block;max-width:100%;}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;}}
+
+/* ============ SPLASH ============ */
+#splash{
+  position:fixed;inset:0;z-index:999;
+  background:var(--grad-hero);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--space-3);
+  max-width:430px;margin:0 auto;
+  transition:opacity .5s var(--ease-smooth), visibility .5s;
+}
+#splash.hide{opacity:0;visibility:hidden;pointer-events:none;}
+#splash .logo-mark{font-size:56px;animation:leaf-bounce 1.8s ease-in-out infinite;}
+#splash .logo-word{color:#fff;font-size:var(--text-4xl);font-weight:800;letter-spacing:-.03em;}
+#splash .logo-tag{color:rgba(255,255,255,.85);font-size:var(--text-sm);font-weight:400;}
+
+/* ============ APP SHELL ============ */
+#app{padding-bottom:96px;min-height:100vh;}
+.screen{display:none;animation:fade-in .4s var(--ease-smooth);}
+.screen.active{display:block;}
+@keyframes fade-in{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* ============ HERO (HOME) ============ */
+.hero{
+  position:relative;overflow:hidden;
+  height:240px;
+  background:var(--grad-hero);
+  border-radius:0 0 var(--radius-3xl) var(--radius-3xl);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--space-2);
+  padding-top:44px;
+  animation:hero-in .7s var(--ease-smooth);
+}
+@keyframes hero-in{from{opacity:0;}to{opacity:1;}}
+.hero .blob{position:absolute;border-radius:50%;background:rgba(255,255,255,.15);filter:blur(2px);}
+.hero .blob1{width:120px;height:120px;top:-30px;left:-30px;animation:float1 8s ease-in-out infinite;}
+.hero .blob2{width:90px;height:90px;bottom:-20px;right:-10px;animation:float2 10s ease-in-out infinite;}
+.hero .blob3{width:60px;height:60px;top:40%;right:20%;background:rgba(255,255,255,.1);animation:float1 7s ease-in-out infinite reverse;}
+@keyframes float1{0%,100%{transform:translate(0,0);}50%{transform:translate(14px,18px);}}
+@keyframes float2{0%,100%{transform:translate(0,0);}50%{transform:translate(-12px,-14px);}}
+.hero .leaf{font-size:30px;animation:leaf-bounce 2.4s ease-in-out infinite;}
+@keyframes leaf-bounce{0%,100%{transform:rotate(-8deg) translateY(0);}50%{transform:rotate(8deg) translateY(-4px);}}
+.hero .wordmark{color:#fff;font-size:42px;font-weight:800;letter-spacing:-.03em;position:relative;z-index:1;}
+.hero .tagline{color:rgba(255,255,255,.9);font-size:var(--text-base);font-weight:400;position:relative;z-index:1;}
+.hero .badge{
+  position:relative;z-index:1;margin-top:var(--space-1);
+  background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);
+  backdrop-filter:blur(10px);color:#fff;font-size:var(--text-xs);font-weight:600;
+  padding:6px 14px;border-radius:var(--radius-full);
+}
+
+/* ============ FORM ============ */
+.form-wrap{padding:var(--space-5) var(--space-4) 0;display:flex;flex-direction:column;gap:var(--space-4);margin-top:var(--space-6);}
+.field-card{
+  background:var(--white);border:1px solid var(--slate-200);border-radius:var(--radius-xl);
+  padding:var(--space-5);box-shadow:var(--shadow-md);
+  transition:box-shadow .2s var(--ease-smooth), border-color .2s var(--ease-smooth);
+}
+.field-card:hover{box-shadow:var(--shadow-lg);}
+.field-card:focus-within{border-color:var(--emerald-500);box-shadow:0 0 0 4px rgba(16,185,129,.12),var(--shadow-lg);}
+.field-label-row{display:flex;align-items:center;gap:var(--space-2);margin-bottom:2px;}
+.field-icon{font-size:20px;}
+.field-label{font-size:var(--text-base);font-weight:600;color:var(--slate-800);}
+.field-sub{font-size:var(--text-xs);color:var(--slate-400);margin-bottom:var(--space-3);margin-left:28px;}
+.field-input-row{display:flex;align-items:center;gap:var(--space-2);}
+.field-input{
+  font-size:var(--text-lg);color:var(--slate-800);font-weight:500;min-height:32px;
+  border:none;outline:none;width:100%;background:transparent;
+}
+.field-input::placeholder{color:var(--slate-400);font-weight:400;font-size:var(--text-base);}
+.char-count{font-size:var(--text-xs);color:var(--slate-300);white-space:nowrap;}
+
+/* chapters stepper */
+.stepper{display:flex;align-items:center;gap:var(--space-4);}
+.stepper-btn{
+  width:40px;height:40px;border-radius:var(--radius-md);border:none;background:var(--emerald-50);
+  color:var(--emerald-600);font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;
+  transition:transform .15s var(--ease-spring), background .15s;
+}
+.stepper-btn:active{transform:scale(.9);background:var(--emerald-100);}
+.stepper-value{font-size:var(--text-2xl);font-weight:800;color:var(--slate-800);min-width:48px;text-align:center;}
+
+/* exam date */
+.date-badge{
+  display:inline-flex;align-items:center;gap:6px;margin-top:var(--space-3);margin-left:28px;
+  font-size:var(--text-xs);font-weight:700;padding:6px 12px;border-radius:var(--radius-full);
+  background:var(--emerald-50);color:var(--emerald-700);transition:background .2s,color .2s;
+}
+.date-badge.warn{background:#FEF3C7;color:#92400E;}
+.date-badge.urgent{background:#FEE2E2;color:#B91C1C;}
+
+/* slider */
+.slider-value{font-size:var(--text-2xl);font-weight:800;color:var(--emerald-500);margin:var(--space-2) 0 var(--space-3) 28px;}
+.slider-track-wrap{padding:0 4px;}
+input[type=range]{
+  -webkit-appearance:none;appearance:none;width:100%;height:8px;border-radius:var(--radius-full);
+  background:linear-gradient(90deg, var(--emerald-500) 0%, var(--emerald-400) 0%, var(--slate-100) 0%);
+  outline:none;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:#fff;
+  border:4px solid var(--emerald-500);box-shadow:var(--shadow-lg);cursor:pointer;
+  transition:transform .15s var(--ease-spring);
+}
+input[type=range]::-webkit-slider-thumb:active{transform:scale(1.15);}
+input[type=range]::-moz-range-thumb{
+  width:28px;height:28px;border-radius:50%;background:#fff;border:4px solid var(--emerald-500);
+  box-shadow:var(--shadow-lg);cursor:pointer;
+}
+.slider-ticks{display:flex;justify-content:space-between;padding:6px 2px 0;font-size:var(--text-xs);color:var(--slate-300);font-weight:600;}
+.slider-motivation{margin:var(--space-3) 0 0 28px;font-size:var(--text-sm);font-weight:600;color:var(--slate-500);}
+
+/* segmented control */
+.segmented{
+  position:relative;display:flex;background:var(--slate-100);border-radius:var(--radius-lg);
+  height:60px;padding:4px;margin-top:var(--space-3);
+}
+.segmented-highlight{
+  position:absolute;top:4px;left:4px;height:52px;width:calc(33.333% - 4px);
+  background:#fff;border-radius:12px;box-shadow:var(--shadow-md);
+  transition:transform .3s var(--ease-spring);z-index:0;
+}
+.segmented-btn{
+  position:relative;z-index:1;flex:1;border:none;background:transparent;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  font-size:var(--text-sm);font-weight:600;color:var(--slate-500);border-radius:12px;
+  transition:color .2s;
+}
+.segmented-btn.active{color:var(--emerald-600);}
+.segmented-btn .emoji{font-size:18px;}
+
+/* CTA button */
+.cta-wrap{padding:var(--space-6) var(--space-4) 0;}
+.cta-btn{
+  position:relative;overflow:hidden;width:100%;height:64px;border:none;border-radius:var(--radius-xl);
+  background:var(--grad-button);box-shadow:var(--shadow-glow),var(--shadow-xl);
+  color:#fff;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px;
+  transition:transform .18s var(--ease-spring), box-shadow .2s;
+}
+.cta-btn:active{transform:scale(.98);}
+.cta-btn .spark{display:inline-block;animation:spark-spin 3s linear infinite;}
+@keyframes spark-spin{from{transform:rotate(0);}to{transform:rotate(360deg);}}
+.cta-btn::after{
+  content:'';position:absolute;top:0;left:-60%;width:50%;height:100%;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,.35),transparent);
+  animation:shine 3s ease-in-out infinite;
+}
+@keyframes shine{0%{left:-60%;}50%{left:130%;}100%{left:130%;}}
+.cta-btn:disabled{opacity:.55;box-shadow:none;}
+
+/* trust badges */
+.trust-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:var(--space-5) var(--space-4) 0;}
+.trust-pill{
+  background:var(--slate-50);border:1px solid var(--slate-100);border-radius:var(--radius-full);
+  padding:8px 14px;font-size:var(--text-xs);color:var(--slate-500);font-weight:500;display:flex;align-items:center;gap:6px;
+}
+
+/* ad placeholder */
+.ad-placeholder{
+  margin:var(--space-6) var(--space-4) 0;padding:var(--space-4);border:1.5px dashed var(--slate-200);
+  border-radius:var(--radius-lg);text-align:center;color:var(--slate-300);font-size:var(--text-xs);
+  letter-spacing:.05em;text-transform:uppercase;font-weight:600;
+}
+
+/* ============ NAV BAR (screens 2/3) ============ */
+.topbar{
+  position:sticky;top:0;z-index:10;height:60px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 var(--space-4);background:rgba(255,255,255,.8);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--slate-100);
+}
+.icon-btn{
+  width:40px;height:40px;border-radius:50%;border:none;background:var(--slate-100);
+  display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--slate-700);
+  transition:transform .15s var(--ease-spring);
+}
+.icon-btn:active{transform:scale(.9);}
+.icon-btn.emerald{background:var(--grad-button);color:#fff;}
+.topbar-title{font-size:var(--text-lg);font-weight:600;color:var(--slate-800);}
+
+/* ============ SUMMARY CARD (PLAN) ============ */
+.summary-card{
+  position:relative;overflow:hidden;margin:var(--space-4);padding:28px;border-radius:var(--radius-2xl);
+  background:var(--grad-hero);box-shadow:var(--shadow-xl);color:#fff;
+}
+.summary-card::after{
+  content:'';position:absolute;top:-50%;left:-20%;width:60%;height:200%;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,.12),transparent);
+  animation:shine 5s ease-in-out infinite;
+}
+.summary-label{font-size:var(--text-xs);opacity:.75;letter-spacing:.08em;text-transform:uppercase;font-weight:700;}
+.summary-subject{font-size:28px;font-weight:800;margin:4px 0 var(--space-4);word-break:break-word;}
+.summary-divider{height:1px;background:rgba(255,255,255,.25);margin-bottom:var(--space-4);}
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);}
+.summary-item{display:flex;flex-direction:column;gap:2px;}
+.summary-item .l{font-size:var(--text-xs);opacity:.75;}
+.summary-item .v{font-size:var(--text-base);font-weight:700;}
+.countdown-badge{
+  position:absolute;top:20px;right:20px;background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.4);
+  backdrop-filter:blur(8px);padding:6px 12px;border-radius:var(--radius-full);font-size:var(--text-xs);font-weight:700;
+}
+
+/* stats row */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 var(--space-4) var(--space-4);}
+.stat-card{
+  background:#fff;border-radius:var(--radius-xl);padding:var(--space-4) var(--space-3);text-align:center;
+  box-shadow:var(--shadow-md);transition:box-shadow .2s,transform .2s;
+}
+.stat-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px);}
+.stat-card .icon{font-size:26px;margin-bottom:4px;}
+.stat-card .num{font-size:var(--text-2xl);font-weight:800;color:var(--slate-800);}
+.stat-card .lbl{font-size:10px;font-weight:600;color:var(--slate-500);text-transform:uppercase;letter-spacing:.04em;}
+
+/* overall progress */
+.progress-section{margin:0 var(--space-4) var(--space-6);}
+.progress-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:var(--space-2);}
+.progress-head h3{font-size:var(--text-base);font-weight:700;color:var(--slate-700);}
+.progress-head .pct{font-size:var(--text-xl);font-weight:800;color:var(--emerald-500);}
+.progress-bar-track{height:12px;background:var(--slate-100);border-radius:var(--radius-full);overflow:hidden;}
+.progress-bar-fill{
+  position:relative;height:100%;background:var(--grad-button);border-radius:var(--radius-full);
+  width:0%;transition:width .6s var(--ease-smooth);overflow:hidden;
+}
+.progress-bar-fill::after{
+  content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);
+  animation:shine 2.5s ease-in-out infinite;
+}
+
+/* day cards section */
+.section-head{padding:0 var(--space-4);margin-bottom:var(--space-3);}
+.section-head h2{font-size:var(--text-2xl);font-weight:700;color:var(--slate-800);}
+.section-head p{font-size:var(--text-sm);color:var(--slate-400);margin-top:2px;}
+.days-list{padding:0 var(--space-4);display:flex;flex-direction:column;gap:var(--space-4);}
+
+.day-card{
+  background:#fff;border-radius:var(--radius-2xl);padding:var(--space-6);box-shadow:var(--shadow-md);
+  border-left:4px solid var(--emerald-500);opacity:0;transform:translateY(20px);
+  animation:card-in .5s var(--ease-spring) forwards;
+}
+@keyframes card-in{to{opacity:1;transform:translateY(0);}}
+.day-card.done{opacity:.75;}
+.day-top-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-4);}
+.day-pill{background:var(--grad-button);color:#fff;font-size:var(--text-xs);font-weight:700;padding:6px 14px;border-radius:var(--radius-full);}
+.day-date{font-size:var(--text-xs);color:var(--slate-500);font-weight:500;}
+.to-study-label{font-size:var(--text-xs);color:var(--slate-400);font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:var(--space-2);}
+.chapter-pills{display:flex;flex-wrap:wrap;gap:8px;}
+.chapter-pill{
+  background:var(--emerald-50);color:var(--emerald-700);border:1px solid var(--emerald-200);
+  padding:8px 14px;border-radius:var(--radius-full);font-size:var(--text-sm);font-weight:500;
+  transition:background .2s;
+}
+.chapter-pill:hover{background:var(--emerald-100);}
+.day-card.done .chapter-pill{text-decoration:line-through;opacity:.7;}
+.break-row{display:flex;align-items:center;gap:8px;margin-top:var(--space-4);padding-top:var(--space-4);border-top:1px solid var(--slate-100);font-size:var(--text-sm);color:var(--slate-500);}
+.day-quote{margin-top:var(--space-3);font-size:var(--text-sm);font-style:italic;color:var(--emerald-600);}
+.mark-done-btn{
+  margin-top:var(--space-5);width:100%;height:48px;border-radius:14px;font-weight:600;font-size:var(--text-base);
+  border:2px solid var(--emerald-500);background:transparent;color:var(--emerald-600);
+  transition:all .2s var(--ease-smooth);position:relative;
+}
+.mark-done-btn.done{background:var(--grad-button);color:#fff;border-color:transparent;}
+
+/* revision card */
+.day-card.revision{background:var(--grad-revision);border-left-color:var(--amber-500);}
+.day-card.revision .day-pill{background:var(--amber-500);}
+.day-card.revision .chapter-pill{background:rgba(255,255,255,.6);border-color:var(--amber-400);color:#92400E;}
+.day-card.revision .mark-done-btn{border-color:var(--amber-500);color:#92400E;}
+.day-card.revision .mark-done-btn.done{background:linear-gradient(135deg,var(--amber-500),#D97706);}
+.day-card.revision .revision-icon{font-size:28px;}
+
+/* exam card */
+.day-card.exam{background:var(--grad-exam);border-left-color:var(--violet-500);text-align:center;padding:var(--space-8) var(--space-6);}
+.day-card.exam .rocket{font-size:44px;animation:rocket-float 2s ease-in-out infinite;}
+@keyframes rocket-float{0%,100%{transform:translateY(0) rotate(-4deg);}50%{transform:translateY(-8px) rotate(4deg);}}
+.day-card.exam .day-pill{background:var(--violet-500);margin:var(--space-3) auto;display:inline-block;}
+.day-card.exam h3{font-size:var(--text-xl);font-weight:800;color:var(--violet-500);margin-top:var(--space-2);}
+.day-card.exam p{font-size:var(--text-sm);color:#6D28D9;margin-top:4px;}
+
+/* ============ PROGRESS SCREEN ============ */
+.progress-header{padding:var(--space-6) var(--space-4) var(--space-4);}
+.progress-header h1{font-size:var(--text-3xl);font-weight:800;color:var(--slate-800);}
+.progress-header p{color:var(--slate-400);font-size:var(--text-sm);margin-top:2px;}
+
+.ring-wrap{position:relative;width:220px;height:220px;margin:var(--space-4) auto var(--space-6);display:flex;align-items:center;justify-content:center;}
+.ring-glow{position:absolute;inset:-20px;background:radial-gradient(circle,var(--emerald-100),transparent 70%);border-radius:50%;}
+.ring-center{position:relative;text-align:center;}
+.ring-center .pct{font-size:48px;font-weight:800;background:var(--grad-button);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.ring-center .lbl{font-size:var(--text-sm);color:var(--slate-500);margin-top:-4px;}
+.ring-center .trend{font-size:var(--text-xs);color:var(--emerald-600);font-weight:600;margin-top:4px;}
+
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 var(--space-4) var(--space-6);}
+.mini-stat{background:#fff;border-radius:var(--radius-xl);padding:var(--space-4);box-shadow:var(--shadow-md);display:flex;align-items:center;gap:12px;}
+.mini-stat .icon-circle{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.mini-stat .num{font-size:var(--text-xl);font-weight:800;color:var(--slate-800);}
+.mini-stat .lbl{font-size:10px;color:var(--slate-400);font-weight:600;text-transform:uppercase;}
+
+.plan-info-card{background:#fff;border-radius:var(--radius-xl);padding:var(--space-5);margin:0 var(--space-4) var(--space-6);box-shadow:var(--shadow-md);}
+.plan-info-card h3{font-size:var(--text-lg);font-weight:700;margin-bottom:2px;}
+.plan-info-card .meta{font-size:var(--text-sm);color:var(--slate-400);margin-bottom:var(--space-3);}
+.view-plan-btn{width:100%;height:44px;border-radius:var(--radius-md);border:none;background:var(--emerald-50);color:var(--emerald-700);font-weight:600;font-size:var(--text-sm);}
+
+.motivation-card{
+  margin:0 var(--space-4) var(--space-6);padding:var(--space-6);border-radius:var(--radius-2xl);
+  background:var(--grad-hero);color:#fff;text-align:center;position:relative;
+}
+.motivation-card .quote{font-size:var(--text-lg);font-weight:600;font-style:italic;margin-bottom:var(--space-2);}
+.motivation-card .by{font-size:var(--text-xs);opacity:.8;}
+.refresh-quote-btn{margin-top:var(--space-3);background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;padding:8px 16px;border-radius:var(--radius-full);font-size:var(--text-xs);font-weight:600;}
+
+.achievements-section{margin:0 var(--space-4) var(--space-6);}
+.achv-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:var(--space-3);}
+.achv-badge{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.achv-circle{width:52px;height:52px;border-radius:50%;background:var(--slate-100);display:flex;align-items:center;justify-content:center;font-size:22px;filter:grayscale(1);opacity:.5;transition:all .3s var(--ease-spring);}
+.achv-circle.unlocked{filter:none;opacity:1;background:var(--grad-button);box-shadow:0 0 16px rgba(16,185,129,.4);transform:scale(1.05);}
+.achv-badge .achv-lbl{font-size:9px;color:var(--slate-400);text-align:center;font-weight:600;}
+
+.danger-zone{margin:0 var(--space-4) var(--space-8);padding:var(--space-5);border-radius:var(--radius-xl);background:#FFF1F2;border:1px solid #FECDD3;}
+.danger-zone h3{font-size:var(--text-base);color:#BE123C;font-weight:700;}
+.danger-zone p{font-size:var(--text-xs);color:#9F1239;margin:4px 0 var(--space-3);}
+.reset-btn{width:100%;height:46px;border-radius:var(--radius-md);border:1.5px solid #FB7185;background:transparent;color:#BE123C;font-weight:600;font-size:var(--text-sm);}
+
+/* ============ BOTTOM NAV ============ */
+#bottom-nav{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;
+  height:80px;padding-bottom:env(safe-area-inset-bottom);background:rgba(255,255,255,.92);backdrop-filter:blur(20px);
+  border-top:1px solid var(--slate-100);border-radius:var(--radius-2xl) var(--radius-2xl) 0 0;
+  box-shadow:0 -8px 20px rgba(0,0,0,.06);display:flex;z-index:50;
+}
+.nav-tab{flex:1;border:none;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--slate-400);padding:10px;}
+.nav-tab .nav-icon{font-size:22px;transition:transform .2s var(--ease-spring);}
+.nav-tab .nav-lbl{font-size:10px;font-weight:600;}
+.nav-tab.active{color:var(--emerald-500);}
+.nav-tab.active .nav-icon{transform:translateY(-2px) scale(1.05);}
+.nav-tab .dot{width:4px;height:4px;border-radius:50%;background:var(--emerald-500);margin-top:1px;opacity:0;}
+.nav-tab.active .dot{opacity:1;}
+
+/* ============ TOAST ============ */
+#toast-container{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:1000;width:calc(100% - 32px);max-width:398px;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.toast{
+  background:var(--slate-800);color:#fff;padding:14px 18px;border-radius:var(--radius-lg);font-size:var(--text-sm);font-weight:500;
+  box-shadow:var(--shadow-xl);animation:toast-in .35s var(--ease-spring);display:flex;align-items:center;gap:8px;
+}
+.toast.success{background:var(--emerald-600);}
+.toast.error{background:#DC2626;}
+@keyframes toast-in{from{transform:translateY(-20px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.toast.out{animation:toast-out .3s ease forwards;}
+@keyframes toast-out{to{transform:translateY(-20px);opacity:0;}}
+
+/* confetti */
+.confetti-piece{position:fixed;width:8px;height:8px;pointer-events:none;z-index:1001;border-radius:2px;animation:confetti-fall 1s ease-out forwards;}
+@keyframes confetti-fall{to{transform:translateY(120px) rotate(360deg);opacity:0;}}
+
+/* empty state helper */
+.field-error{border-color:var(--rose-400) !important;}
+</style>
+</head>
+<body>
+
+<div id="splash">
+  <div class="logo-mark">🌿</div>
+  <div class="logo-word">PLANZO</div>
+  <div class="logo-tag">Study Smarter. Finish Faster.</div>
+</div>
+
+<div id="toast-container"></div>
+
+<div id="app">
+
+  <!-- ===== SCREEN 1: HOME ===== -->
+  <main id="screen-home" class="screen active">
+    <div class="hero">
+      <div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div>
+      <div class="leaf">🌿</div>
+      <div class="wordmark">PLANZO</div>
+      <div class="tagline">Study Smarter. Finish Faster.</div>
+      <div class="badge">✨ 100% Free Forever</div>
+    </div>
+
+    <form id="plan-form" class="form-wrap">
+      <!-- Field 1: Subject -->
+      <div class="field-card">
+        <div class="field-label-row"><span class="field-icon">📚</span><span class="field-label">What are you studying?</span></div>
+        <div class="field-sub">Enter your subject name</div>
+        <div class="field-input-row">
+          <input class="field-input" id="input-subject" type="text" maxlength="40" placeholder="Mathematics, Physics, Chemistry...">
+          <span class="char-count" id="char-count">0/40</span>
+        </div>
+      </div>
+
+      <!-- Field 2: Chapters -->
+      <div class="field-card">
+        <div class="field-label-row"><span class="field-icon">📖</span><span class="field-label">How many chapters?</span></div>
+        <div class="field-sub">Total chapters in syllabus</div>
+        <div class="stepper">
+          <button type="button" class="stepper-btn" id="chapters-minus">−</button>
+          <span class="stepper-value" id="chapters-value">12</span>
+          <button type="button" class="stepper-btn" id="chapters-plus">+</button>
+        </div>
+      </div>
+
+      <!-- Field 3: Exam Date -->
+      <div class="field-card">
+        <div class="field-label-row"><span class="field-icon">📅</span><span class="field-label">When is your exam?</span></div>
+        <div class="field-sub">Select your exam date</div>
+        <div class="field-input-row">
+          <input class="field-input" id="input-exam-date" type="date">
+        </div>
+        <div class="date-badge" id="days-remaining-badge" style="display:none;"></div>
+      </div>
+
+      <!-- Field 4: Daily Hours -->
+      <div class="field-card">
+        <div class="field-label-row"><span class="field-icon">⏰</span><span class="field-label">Study hours per day</span></div>
+        <div class="field-sub">How much time can you dedicate?</div>
+        <div class="slider-value" id="hours-value">4 hours</div>
+        <div class="slider-track-wrap">
+          <input type="range" id="input-hours" min="1" max="12" value="4" step="1">
+          <div class="slider-ticks"><span>1</span><span>3</span><span>6</span><span>9</span><span>12</span></div>
+        </div>
+        <div class="slider-motivation" id="hours-motivation">Perfect balance! ⚖️</div>
+      </div>
+
+      <!-- Field 5: Difficulty -->
+      <div class="field-card">
+        <div class="field-label-row"><span class="field-icon">🎯</span><span class="field-label">Chapter difficulty level</span></div>
+        <div class="field-sub">How tough is the syllabus?</div>
+        <div class="segmented" id="difficulty-segmented">
+          <div class="segmented-highlight" id="segmented-highlight"></div>
+          <button type="button" class="segmented-btn" data-value="easy"><span class="emoji">😊</span>Easy</button>
+          <button type="button" class="segmented-btn active" data-value="medium"><span class="emoji">😤</span>Medium</button>
+          <button type="button" class="segmented-btn" data-value="hard"><span class="emoji">🔥</span>Hard</button>
+        </div>
+      </div>
+
+      <div class="cta-wrap">
+        <button type="submit" class="cta-btn" id="generate-btn"><span class="spark">✨</span>Generate My Plan</button>
+      </div>
+    </form>
+
+    <div class="trust-row">
+      <div class="trust-pill">🚫 No Login Required</div>
+      <div class="trust-pill">💾 Saves Automatically</div>
+      <div class="trust-pill">🆓 Free Forever</div>
+    </div>
+
+    <div class="ad-placeholder">Advertisement</div>
+  </main>
+
+  <!-- ===== SCREEN 2: PLAN ===== -->
+  <main id="screen-plan" class="screen">
+    <div class="topbar">
+      <button class="icon-btn" id="plan-back-btn">←</button>
+      <span class="topbar-title">Your Study Plan</span>
+      <button class="icon-btn emerald" id="plan-share-btn">⤴</button>
+    </div>
+
+    <div class="summary-card">
+      <span class="countdown-badge" id="countdown-badge">18 DAYS LEFT</span>
+      <div class="summary-label">Studying</div>
+      <div class="summary-subject" id="summary-subject">Mathematics</div>
+      <div class="summary-divider"></div>
+      <div class="summary-grid">
+        <div class="summary-item"><span class="l">📅 Exam date</span><span class="v" id="summary-date">—</span></div>
+        <div class="summary-item"><span class="l">📖 Chapters</span><span class="v" id="summary-chapters">—</span></div>
+        <div class="summary-item"><span class="l">⏰ Hours/day</span><span class="v" id="summary-hours">—</span></div>
+        <div class="summary-item"><span class="l">🎯 Difficulty</span><span class="v" id="summary-difficulty">—</span></div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="icon">📅</div><div class="num" id="stat-study-days">0</div><div class="lbl">Study Days</div></div>
+      <div class="stat-card"><div class="icon">📖</div><div class="num" id="stat-ch-per-day">0</div><div class="lbl">Ch/Day</div></div>
+      <div class="stat-card"><div class="icon">🔄</div><div class="num" id="stat-revision-days">0</div><div class="lbl">Revision Days</div></div>
+    </div>
+
+    <div class="progress-section">
+      <div class="progress-head"><h3>Overall Progress</h3><span class="pct" id="plan-progress-pct">0%</span></div>
+      <div class="progress-bar-track"><div class="progress-bar-fill" id="plan-progress-fill"></div></div>
+    </div>
+
+    <div class="section-head">
+      <h2>Your Daily Plan 📋</h2>
+      <p>Follow these steps to success</p>
+    </div>
+    <div class="days-list" id="days-list"></div>
+    <div style="height:24px;"></div>
+  </main>
+
+  <!-- ===== SCREEN 3: PROGRESS ===== -->
+  <main id="screen-progress" class="screen">
+    <div class="progress-header">
+      <h1>Your Progress</h1>
+      <p>Look how far you've come!</p>
+    </div>
+
+    <div class="ring-wrap">
+      <div class="ring-glow"></div>
+      <svg width="220" height="220" viewBox="0 0 220 220">
+        <circle cx="110" cy="110" r="94" fill="none" stroke="#F1F5F9" stroke-width="12"/>
+        <circle id="ring-progress" cx="110" cy="110" r="94" fill="none" stroke="url(#ringGrad)" stroke-width="12"
+          stroke-linecap="round" stroke-dasharray="590.6" stroke-dashoffset="590.6"
+          transform="rotate(-90 110 110)" style="transition:stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1);"/>
+        <defs>
+          <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#10B981"/><stop offset="100%" stop-color="#6EE7B7"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="ring-center">
+        <div class="pct" id="ring-pct">0%</div>
+        <div class="lbl">Complete</div>
+        <div class="trend" id="ring-trend"></div>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="mini-stat"><div class="icon-circle" style="background:var(--emerald-50);">✅</div><div><div class="num" id="prog-done">0</div><div class="lbl">Chapters Done</div></div></div>
+      <div class="mini-stat"><div class="icon-circle" style="background:#FEF3C7;">📖</div><div><div class="num" id="prog-left">0</div><div class="lbl">Chapters Left</div></div></div>
+      <div class="mini-stat"><div class="icon-circle" style="background:#EDE9FE;">📅</div><div><div class="num" id="prog-days-left">0</div><div class="lbl">Days Remaining</div></div></div>
+      <div class="mini-stat"><div class="icon-circle" style="background:#FFEDD5;">🔥</div><div><div class="num" id="prog-streak">0</div><div class="lbl">Study Streak</div></div></div>
+    </div>
+
+    <div class="plan-info-card">
+      <h3 id="info-subject">—</h3>
+      <div class="meta" id="info-meta">—</div>
+      <div class="progress-bar-track" style="margin-bottom:12px;"><div class="progress-bar-fill" id="info-progress-fill"></div></div>
+      <button class="view-plan-btn" id="view-plan-btn">View Full Plan</button>
+    </div>
+
+    <div class="motivation-card">
+      <div class="quote" id="motivation-quote">"Aaj ka plan complete karo, kal tension nahi! 💪"</div>
+      <div class="by">— PLANZO says</div>
+      <button class="refresh-quote-btn" id="refresh-quote-btn">🔄 New Quote</button>
+    </div>
+
+    <div class="achievements-section">
+      <div class="section-head" style="padding:0;"><h2 style="font-size:var(--text-xl);">Achievements 🏆</h2></div>
+      <div class="achv-grid" id="achv-grid"></div>
+    </div>
+
+    <div class="danger-zone">
+      <h3>Danger Zone</h3>
+      <p>This will permanently delete your current plan and progress.</p>
+      <button class="reset-btn" id="reset-btn">🔄 Reset &amp; Create New Plan</button>
+    </div>
+  </main>
+
+</div>
+
+<nav id="bottom-nav">
+  <button class="nav-tab active" data-screen="home"><span class="nav-icon">🏠</span><span class="nav-lbl">Home</span><span class="dot"></span></button>
+  <button class="nav-tab" data-screen="plan"><span class="nav-icon">📋</span><span class="nav-lbl">Plan</span><span class="dot"></span></button>
+  <button class="nav-tab" data-screen="progress"><span class="nav-icon">📊</span><span class="nav-lbl">Progress</span><span class="dot"></span></button>
+</nav>
+
+<script>
+(function(){
+"use strict";
+
+/* ============ QUOTES ============ */
+var QUOTES = [
+  "Aaj ka plan complete karo, kal tension nahi! 💪",
+  "Ek chapter at a time, you got this! 🔥",
+  "Padhai mein laga de aaj! 📚",
+  "Champion banna hai toh plan follow karo! 🏆",
+  "Thoda aur, almost there! Keep going! ⭐",
+  "Consistency hi key hai bhai! 🗝️",
+  "Aaj mehnat, kal result! 🎯",
+  "Tu kar sakta hai, bas karta reh! 💫",
+  "Ek ek chapter, ek ek step! 🚶",
+  "Padh le bhai, Netflix baad mein! 😂",
+  "Focus mode on! Distraction off! 📵",
+  "Apna best de, baaki bhagwan pe chhod! 🙏",
+  "Hard work beats talent every time! 💪",
+  "Aaj ka chapter aaj hi khatam! ✅",
+  "Study now, selfie later! 📸",
+  "Success ka koi shortcut nahi! 🎯",
+  "Book kholo, phone rakho! 📖",
+  "Dream big, study bigger! 🌟",
+  "Toppers bhi tere jaise hi the! 🏆",
+  "Small progress is still progress! 📈",
+  "Believe in your PLANZO plan! 🌿",
+  "Har din ek naya chapter! 📅",
+  "Padhai + Consistency = Success! ⚡",
+  "You + Plan = Unstoppable! 🚀",
+  "Aaj ka effort, kal ka reward! 🎁"
+];
+function randomQuote(){ return QUOTES[Math.floor(Math.random()*QUOTES.length)]; }
+
+/* ============ STATE ============ */
+var state = {
+  subject:'', chapters:12, examDate:'', hours:4, difficulty:'medium',
+  plan:[], createdAt:null
+};
+
+var LS = {
+  plan:'planzo_plan', subject:'planzo_subject', exam:'planzo_exam',
+  chapters:'planzo_chapters', hours:'planzo_hours', difficulty:'planzo_difficulty',
+  created:'planzo_created_at'
+};
+
+/* ============ HELPERS ============ */
+function $(id){ return document.getElementById(id); }
+function pad(n){ return n<10 ? '0'+n : ''+n; }
+function toISODate(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+function formatDate(d){
+  var days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return days[d.getDay()]+', '+months[d.getMonth()]+' '+d.getDate();
+}
+function daysBetween(a,b){ return Math.round((b-a)/86400000); }
+
+/* ============ TOAST ============ */
+function showToast(msg, type){
+  var c = $('toast-container');
+  var t = document.createElement('div');
+  t.className = 'toast' + (type ? ' '+type : '');
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(function(){
+    t.classList.add('out');
+    setTimeout(function(){ t.remove(); }, 300);
+  }, 2600);
+}
+
+/* ============ CONFETTI ============ */
+function burstConfetti(x, y){
+  var colors = ['#10B981','#34D399','#FBBF24','#8B5CF6','#38BDF8'];
+  for (var i=0;i<14;i++){
+    var p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.left = x + 'px';
+    p.style.top = y + 'px';
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    var dx = (Math.random()-0.5) * 120;
+    p.style.setProperty('--dx', dx+'px');
+    p.style.transform = 'translate(0,0)';
+    p.animate([
+      { transform:'translate(0,0) rotate(0)', opacity:1 },
+      { transform:'translate('+dx+'px,110px) rotate('+(Math.random()*360)+'deg)', opacity:0 }
+    ], { duration: 900+Math.random()*400, easing:'cubic-bezier(.25,.8,.25,1)' });
+    document.body.appendChild(p);
+    (function(el){ setTimeout(function(){ el.remove(); }, 1400); })(p);
+  }
+}
+
+/* ============ SCREEN NAV ============ */
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  $('screen-'+name).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(function(t){
+    t.classList.toggle('active', t.dataset.screen === name);
+  });
+  window.scrollTo(0,0);
+  if (name === 'plan') renderPlan();
+  if (name === 'progress') updateProgress();
+}
+
+document.querySelectorAll('.nav-tab').forEach(function(tab){
+  tab.addEventListener('click', function(){
+    var target = tab.dataset.screen;
+    if ((target === 'plan' || target === 'progress') && (!state.plan || state.plan.length === 0)){
+      showToast('Create a plan first! 📝', 'error');
+      return;
+    }
+    showScreen(target);
+  });
+});
+
+/* ============ FIELD 1: SUBJECT ============ */
+var subjectInput = $('input-subject');
+subjectInput.addEventListener('input', function(){
+  state.subject = subjectInput.value;
+  $('char-count').textContent = subjectInput.value.length + '/40';
+});
+
+/* ============ FIELD 2: CHAPTERS ============ */
+function setChapters(v){
+  v = Math.max(1, Math.min(99, v));
+  state.chapters = v;
+  $('chapters-value').textContent = v;
+}
+$('chapters-minus').addEventListener('click', function(){ setChapters(state.chapters - 1); });
+$('chapters-plus').addEventListener('click', function(){ setChapters(state.chapters + 1); });
+setChapters(12);
+
+/* ============ FIELD 3: EXAM DATE ============ */
+var examInput = $('input-exam-date');
+(function(){
+  var today = new Date();
+  var min = new Date(today.getTime()+86400000);
+  examInput.min = toISODate(min);
+  var def = new Date(today.getTime()+21*86400000);
+  examInput.value = toISODate(def);
+  state.examDate = examInput.value;
+  updateDaysBadge();
+})();
+function updateDaysBadge(){
+  var badge = $('days-remaining-badge');
+  if (!examInput.value){ badge.style.display='none'; return; }
+  var today = new Date(); today.setHours(0,0,0,0);
+  var exam = new Date(examInput.value+'T00:00:00');
+  var diff = daysBetween(today, exam);
+  badge.style.display = 'inline-flex';
+  badge.textContent = diff >= 0 ? diff + ' days remaining' : 'Pick a future date';
+  badge.classList.remove('warn','urgent');
+  if (diff < 7) badge.classList.add('urgent');
+  else if (diff < 30) badge.classList.add('warn');
+}
+examInput.addEventListener('change', function(){
+  state.examDate = examInput.value;
+  updateDaysBadge();
+});
+
+/* ============ FIELD 4: HOURS SLIDER ============ */
+var hoursInput = $('input-hours');
+var hoursMotivations = [
+  {max:2, text:'Every hour counts! 💪'},
+  {max:4, text:'Perfect balance! ⚖️'},
+  {max:6, text:"You're serious! 🔥"},
+  {max:8, text:'Beast mode! 💯'},
+  {max:12, text:'Superhuman! 🚀'}
+];
+function updateHoursUI(){
+  var v = parseInt(hoursInput.value, 10);
+  state.hours = v;
+  $('hours-value').textContent = v + ' hour' + (v>1?'s':'');
+  var pct = ((v-1)/(12-1))*100;
+  hoursInput.style.background = 'linear-gradient(90deg, var(--emerald-500) '+pct+'%, var(--slate-100) '+pct+'%)';
+  var m = hoursMotivations.find(function(x){ return v <= x.max; }) || hoursMotivations[hoursMotivations.length-1];
+  $('hours-motivation').textContent = m.text;
+}
+hoursInput.addEventListener('input', updateHoursUI);
+updateHoursUI();
+
+/* ============ FIELD 5: DIFFICULTY SEGMENTED ============ */
+var segBtns = document.querySelectorAll('.segmented-btn');
+var segHighlight = $('segmented-highlight');
+function setDifficulty(val, animate){
+  state.difficulty = val;
+  segBtns.forEach(function(b){ b.classList.toggle('active', b.dataset.value === val); });
+  var idx = Array.prototype.indexOf.call(segBtns, Array.prototype.find.call(segBtns, function(b){ return b.dataset.value === val; }));
+  segHighlight.style.transform = 'translateX(' + (idx*100) + '%)';
+}
+segBtns.forEach(function(btn){
+  btn.addEventListener('click', function(){ setDifficulty(btn.dataset.value); });
+});
+setDifficulty('medium');
+
+/* ============ BUILD PLAN ALGORITHM ============ */
+function revisionLabel(idx, totalRevisionDays, totalChapters){
+  if (totalChapters <= 0) return ['All topics'];
+  var perChunk = Math.ceil(totalChapters / totalRevisionDays);
+  var start = idx*perChunk + 1;
+  var end = Math.min(totalChapters, (idx+1)*perChunk);
+  if (start > totalChapters) return ['Quick full recap'];
+  return start === end ? ['Chapter ' + start] : ['Chapters ' + start + '–' + end];
+}
+
+function buildPlan(){
+  var today = new Date(); today.setHours(0,0,0,0);
+  var exam = new Date(state.examDate + 'T00:00:00');
+  var totalDays = daysBetween(today, exam);
+  if (totalDays < 1) totalDays = 1;
+
+  var diffMult = { easy:1.2, medium:1.0, hard:0.8 }[state.difficulty] || 1.0;
+  var revisionDays = totalDays > 10 ? 2 : (totalDays > 4 ? 1 : 0);
+  var examDayReserved = 1;
+  var studyDaysAvailable = Math.max(1, totalDays - revisionDays - examDayReserved);
+
+  var chaptersPerDay = Math.max(1, Math.round((state.chapters / studyDaysAvailable) * diffMult));
+
+  var chunks = [];
+  var remaining = state.chapters;
+  while (remaining > 0){
+    var take = Math.min(chaptersPerDay, remaining);
+    chunks.push(take);
+    remaining -= take;
+  }
+  if (chunks.length === 0) chunks.push(0);
+  while (chunks.length > studyDaysAvailable){
+    var extra = chunks.pop();
+    chunks[chunks.length-1] += extra;
+  }
+  var bonusRevisionDays = Math.min(12, Math.max(0, studyDaysAvailable - chunks.length));
+  revisionDays += bonusRevisionDays;
+
+  var plan = [];
+  var cursorDate = new Date(today);
+  var dayNum = 1;
+  var chapterCursor = 0;
+
+  chunks.forEach(function(count){
+    var chaptersForDay = [];
+    for (var i=0;i<count;i++){ chapterCursor++; chaptersForDay.push('Chapter ' + chapterCursor); }
+    plan.push({
+      dayNumber: dayNum++, date: formatDate(cursorDate), type:'study',
+      chapters: chaptersForDay, isDone:false, quote: randomQuote()
+    });
+    cursorDate.setDate(cursorDate.getDate()+1);
+  });
+
+  for (var r=0;r<revisionDays;r++){
+    plan.push({
+      dayNumber: dayNum++, date: formatDate(cursorDate), type:'revision',
+      chapters: revisionLabel(r, revisionDays, state.chapters), isDone:false, quote: randomQuote()
+    });
+    cursorDate.setDate(cursorDate.getDate()+1);
+  }
+
+  plan.push({
+    dayNumber: dayNum++, date: formatDate(exam), type:'exam',
+    chapters: [], isDone:false, quote:'You are 100% ready!'
+  });
+
+  state.plan = plan;
+  state.createdAt = new Date().toISOString();
+  savePlan();
+}
+
+/* ============ PERSISTENCE ============ */
+function savePlan(){
+  try{
+    localStorage.setItem(LS.plan, JSON.stringify(state.plan));
+    localStorage.setItem(LS.subject, state.subject);
+    localStorage.setItem(LS.exam, state.examDate);
+    localStorage.setItem(LS.chapters, String(state.chapters));
+    localStorage.setItem(LS.hours, String(state.hours));
+    localStorage.setItem(LS.difficulty, state.difficulty);
+    localStorage.setItem(LS.created, state.createdAt || new Date().toISOString());
+  }catch(e){ showToast('Could not save — storage unavailable', 'error'); }
+}
+function loadPlan(){
+  try{
+    var raw = localStorage.getItem(LS.plan);
+    if (!raw) return false;
+    state.plan = JSON.parse(raw);
+    state.subject = localStorage.getItem(LS.subject) || '';
+    state.examDate = localStorage.getItem(LS.exam) || '';
+    state.chapters = parseInt(localStorage.getItem(LS.chapters), 10) || 12;
+    state.hours = parseInt(localStorage.getItem(LS.hours), 10) || 4;
+    state.difficulty = localStorage.getItem(LS.difficulty) || 'medium';
+    state.createdAt = localStorage.getItem(LS.created);
+    return state.plan && state.plan.length > 0;
+  }catch(e){ return false; }
+}
+function clearPlan(){
+  try{ Object.keys(LS).forEach(function(k){ localStorage.removeItem(LS[k]); }); }catch(e){}
+  state.plan = []; state.subject=''; state.examDate=''; state.chapters=12; state.hours=4; state.difficulty='medium';
+}
+
+/* ============ FORM SUBMIT ============ */
+$('plan-form').addEventListener('submit', function(e){
+  e.preventDefault();
+  var card = subjectInput.closest('.field-card');
+  card.classList.remove('field-error');
+  if (!state.subject || !state.subject.trim()){
+    card.classList.add('field-error');
+    showToast('Please enter what you\'re studying 📚', 'error');
+    subjectInput.focus();
+    return;
+  }
+  if (!state.examDate){
+    showToast('Please select your exam date 📅', 'error');
+    return;
+  }
+  var today = new Date(); today.setHours(0,0,0,0);
+  var exam = new Date(state.examDate+'T00:00:00');
+  if (exam <= today){
+    showToast('Exam date should be in the future ⏳', 'error');
+    return;
+  }
+  buildPlan();
+  showToast('Your plan is ready! 🎉', 'success');
+  showScreen('plan');
+});
+
+/* ============ RENDER PLAN SCREEN ============ */
+function difficultyLabel(d){ return { easy:'😊 Easy', medium:'😤 Medium', hard:'🔥 Hard' }[d] || d; }
+
+function renderPlan(){
+  if (!state.plan || state.plan.length === 0) return;
+
+  $('summary-subject').textContent = state.subject || 'Your Subject';
+  var examD = new Date(state.examDate+'T00:00:00');
+  $('summary-date').textContent = formatDate(examD);
+  $('summary-chapters').textContent = state.chapters;
+  $('summary-hours').textContent = state.hours + ' hrs';
+  $('summary-difficulty').textContent = difficultyLabel(state.difficulty);
+
+  var today = new Date(); today.setHours(0,0,0,0);
+  var daysLeft = daysBetween(today, examD);
+  $('countdown-badge').textContent = (daysLeft >= 0 ? daysLeft : 0) + (daysLeft === 1 ? ' DAY LEFT' : ' DAYS LEFT') + (daysLeft <= 3 && daysLeft >= 0 ? ' 🔥' : '');
+
+  var studyDays = state.plan.filter(function(d){ return d.type==='study'; });
+  var revisionDaysArr = state.plan.filter(function(d){ return d.type==='revision'; });
+  animateCount($('stat-study-days'), studyDays.length);
+  var avgPerDay = studyDays.length ? Math.round(state.chapters/studyDays.length) : 0;
+  animateCount($('stat-ch-per-day'), avgPerDay);
+  animateCount($('stat-revision-days'), revisionDaysArr.length);
+
+  var doneCount = state.plan.filter(function(d){ return d.isDone; }).length;
+  var pct = Math.round((doneCount/state.plan.length)*100);
+  $('plan-progress-pct').textContent = pct + '%';
+  requestAnimationFrame(function(){ $('plan-progress-fill').style.width = pct + '%'; });
+
+  var list = $('days-list');
+  list.innerHTML = '';
+  state.plan.forEach(function(day, idx){
+    list.appendChild(renderDayCard(day, idx));
+  });
+}
+
+function renderDayCard(day, idx){
+  var card = document.createElement('div');
+  card.className = 'day-card ' + day.type + (day.isDone ? ' done' : '');
+  card.style.animationDelay = (idx*0.05) + 's';
+
+  if (day.type === 'exam'){
+    card.innerHTML =
+      '<div class="rocket">🚀</div>' +
+      '<div class="day-pill">EXAM DAY</div>' +
+      '<h3>You are 100% ready!</h3>' +
+      '<p>Trust yourself. You got this! 💪</p>';
+    return card;
+  }
+
+  var topRow = '<div class="day-top-row"><span class="day-pill">Day ' + day.dayNumber + '</span><span class="day-date">📆 ' + day.date + '</span></div>';
+
+  var pillsHTML = '';
+  if (day.type === 'revision'){
+    pillsHTML += '<div class="revision-icon">🔄</div><div class="day-pill" style="margin:8px 0;display:inline-block;">Revision Day</div>';
+  }
+  pillsHTML += '<div class="to-study-label">' + (day.type==='revision' ? 'TO REVISE' : 'TO STUDY') + '</div>';
+  pillsHTML += '<div class="chapter-pills">' + day.chapters.map(function(c){
+    return '<span class="chapter-pill">📘 ' + c + '</span>';
+  }).join('') + '</div>';
+
+  var breakRow = day.type === 'study'
+    ? '<div class="break-row"><span>☕</span><span>10 min break after every 2 hours</span></div>'
+    : '';
+
+  var quoteHTML = '<div class="day-quote">“' + day.quote + '”</div>';
+
+  var btnHTML = '<button type="button" class="mark-done-btn' + (day.isDone?' done':'') + '" data-idx="' + idx + '">' +
+    (day.isDone ? '✅ Completed!' : 'Mark as Done ✓') + '</button>';
+
+  card.innerHTML = topRow + pillsHTML + breakRow + quoteHTML + btnHTML;
+
+  var btn = card.querySelector('.mark-done-btn');
+  btn.addEventListener('click', function(ev){
+    markDone(idx, ev);
+  });
+
+  return card;
+}
+
+function markDone(idx, ev){
+  var day = state.plan[idx];
+  day.isDone = !day.isDone;
+  savePlan();
+  if (day.isDone && ev && ev.target){
+    var r = ev.target.getBoundingClientRect();
+    burstConfetti(r.left + r.width/2, r.top);
+  }
+  renderPlan();
+}
+
+/* ============ SHARE / BACK ============ */
+$('plan-back-btn').addEventListener('click', function(){ showScreen('home'); });
+$('plan-share-btn').addEventListener('click', function(){ sharePlan(); });
+function sharePlan(){
+  var text = 'My PLANZO study plan for ' + (state.subject||'my exam') + ' — ' + state.chapters + ' chapters before ' + state.examDate + '. Study Smarter. Finish Faster. 🌿';
+  if (navigator.share){
+    navigator.share({ title:'My PLANZO Plan', text: text }).catch(function(){});
+  } else if (navigator.clipboard){
+    navigator.clipboard.writeText(text).then(function(){
+      showToast('Plan copied to clipboard! 📋', 'success');
+    }).catch(function(){ showToast('Could not copy plan', 'error'); });
+  } else {
+    showToast('Sharing not supported on this device', 'error');
+  }
+}
+
+/* ============ NUMBER COUNT UP ============ */
+function animateCount(el, target){
+  var start = 0;
+  var duration = Math.min(1200, 300 + target*40);
+  var startTime = null;
+  function step(ts){
+    if (!startTime) startTime = ts;
+    var progress = Math.min(1, (ts-startTime)/duration);
+    var eased = 1 - Math.pow(1-progress, 3);
+    el.textContent = Math.round(start + (target-start)*eased);
+    if (progress < 1) requestAnimationFrame(step);
+    else el.textContent = target;
+  }
+  requestAnimationFrame(step);
+}
+
+/* ============ PROGRESS SCREEN ============ */
+var ACHIEVEMENTS = [
+  { id:'first', icon:'🏁', label:'First Day' },
+  { id:'streak3', icon:'🔥', label:'3 Day Streak' },
+  { id:'half', icon:'📚', label:'50% Done' },
+  { id:'full', icon:'🏆', label:'100% Done' },
+  { id:'week', icon:'⭐', label:'Perfect Week' }
+];
+
+function updateProgress(){
+  if (!state.plan || state.plan.length === 0) return;
+
+  var studyDays = state.plan.filter(function(d){ return d.type !== 'exam'; });
+  var doneStudy = studyDays.filter(function(d){ return d.isDone; });
+  var totalChapterUnits = state.plan.reduce(function(sum,d){ return sum + (d.type==='study'?d.chapters.length:0); }, 0);
+  var doneChapterUnits = state.plan.reduce(function(sum,d){ return sum + (d.type==='study' && d.isDone ? d.chapters.length : 0); }, 0);
+
+  var pct = studyDays.length ? Math.round((doneStudy.length/studyDays.length)*100) : 0;
+
+  var circumference = 590.6;
+  var offset = circumference - (pct/100)*circumference;
+  $('ring-progress').style.strokeDashoffset = offset;
+  animateCount($('ring-pct'), pct);
+  setTimeout(function(){ $('ring-pct').textContent = pct + '%'; }, 1300);
+  $('ring-trend').textContent = doneStudy.length > 0 ? '↑ ' + doneStudy.length + ' day' + (doneStudy.length>1?'s':'') + ' logged' : '';
+
+  animateCount($('prog-done'), doneChapterUnits);
+  animateCount($('prog-left'), Math.max(0, totalChapterUnits - doneChapterUnits));
+
+  var today = new Date(); today.setHours(0,0,0,0);
+  var examD = new Date(state.examDate+'T00:00:00');
+  var daysLeft = Math.max(0, daysBetween(today, examD));
+  animateCount($('prog-days-left'), daysLeft);
+
+  var streak = 0, maxStreak = 0;
+  studyDays.forEach(function(d){
+    if (d.isDone){ streak++; maxStreak = Math.max(maxStreak, streak); } else { streak = 0; }
+  });
+  animateCount($('prog-streak'), maxStreak);
+
+  $('info-subject').textContent = state.subject || 'Your Subject';
+  $('info-meta').textContent = 'Exam on ' + formatDate(examD) + ' · ' + state.chapters + ' chapters';
+  requestAnimationFrame(function(){ $('info-progress-fill').style.width = pct + '%'; });
+
+  var unlocked = {
+    first: doneStudy.length >= 1,
+    streak3: maxStreak >= 3,
+    half: pct >= 50,
+    full: pct >= 100,
+    week: maxStreak >= 7
+  };
+  var grid = $('achv-grid');
+  grid.innerHTML = '';
+  ACHIEVEMENTS.forEach(function(a){
+    var el = document.createElement('div');
+    el.className = 'achv-badge';
+    el.innerHTML = '<div class="achv-circle' + (unlocked[a.id] ? ' unlocked' : '') + '">' + a.icon + '</div><div class="achv-lbl">' + a.label + '</div>';
+    grid.appendChild(el);
+  });
+}
+
+$('refresh-quote-btn').addEventListener('click', function(){
+  $('motivation-quote').textContent = '"' + randomQuote() + '"';
+});
+$('view-plan-btn').addEventListener('click', function(){ showScreen('plan'); });
+
+/* ============ RESET ============ */
+$('reset-btn').addEventListener('click', function(){
+  if (confirm('This will delete your current plan and progress. Are you sure?')){
+    clearPlan();
+    showToast('Plan reset. Start fresh! 🌱', 'success');
+    subjectInput.value=''; $('char-count').textContent='0/40';
+    setChapters(12);
+    setDifficulty('medium');
+    updateHoursUI();
+    showScreen('home');
+  }
+});
+
+/* ============ INIT ============ */
+function init(){
+  if (loadPlan()){
+    subjectInput.value = state.subject;
+    $('char-count').textContent = state.subject.length + '/40';
+    examInput.value = state.examDate;
+    updateDaysBadge();
+    setChapters(state.chapters);
+    hoursInput.value = state.hours;
+    updateHoursUI();
+    setDifficulty(state.difficulty);
+    showScreen('plan');
+  }
+  setTimeout(function(){
+    $('splash').classList.add('hide');
+  }, 500);
+}
+init();
+
+})();
+</script>
+</body>
+</html>
